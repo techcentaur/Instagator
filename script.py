@@ -3,7 +3,6 @@ import json
 import argparse
 import urllib.request
 from PIL import Image
-import os
 
 class Insta:
     def __init__(self, username):
@@ -27,32 +26,38 @@ class Insta:
             image = (data['entry_data']['ProfilePage'][0]['graphql']['user']['profile_pic_url_hd'])
             name = (data['entry_data']['ProfilePage'][0]['graphql']['user']['username'])
     
-            urllib.request.urlretrieve(image, name + ".jpg")
     
-            return [bio, fullname, name]        
-
+            return [bio, fullname, name, image]        
 
 def main():
 
-    parser = argparse.ArgumentParser(description='Investigate Instagram')
+    parser = argparse.ArgumentParser(description='Instagator: Get Display Pic In High Quality')
     parser.add_argument('username', help='Enter the username')
-    parser.add_argument('-q', '--quiet', help='Quiet mode', default=False)
+    parser.add_argument('-q', '--quiet', help='Quiet mode', default=False, action="store_true")
     args = parser.parse_args()
 
-    print('[*] Searching for the username ...')
+    if not args.quiet:
+        print('[*] Searching for the username ...')
     insta = Insta(args.username)
-    
-    print('[*] Rendering the display image ...')
     data = insta.data()
+    
+    if not args.quiet:
+        print('[*] Rendering the display image ...')
 
-    print('[.] Fullname:', data[1])
-    print('[.] Username:', data[3])
-    print('[.] Bio:', data[0])
+    urllib.request.urlretrieve(data[3], data[2] + ".jpg")
 
-    print('[.] Image:')
-    Image.open(data[3] + ".jpg").show()
+    if not args.quiet:
+        print('[.] Fullname:', data[1])
+        print('[.] Username:', data[2])
+        print('[.] Bio:', data[0])
 
-    print('[!] Made by - Techcentaur')
+    if not args.quiet:
+        print('[.] Image:')
+    
+    Image.open(data[2] + ".jpg").show()
+
+    if not args.quiet:
+        print('[!] Made by - Techcentaur')
 
 if __name__=="__main__":
     main()
