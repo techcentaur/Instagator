@@ -37,5 +37,4 @@ optional arguments:
 
 ## What will be new?
 
-- Search keywords in any user's profile ( Bio, comments, captions).
-- Search nearby user's bio.
+- Search keywords in any user's profile ( Bio, comments, captions ).
