@@ -33,4 +33,9 @@ optional arguments:
 #### Functions Usage
 
 - **About class** - can be instantiated like `Insta(<username>)`.
-- `data()` method that will return a list as [bio, fullname, name, image].
+- `data()` method that will return a list as `[bio, fullname, name, image]`.
+
+## What will be new?
+
+- Search keywords in any user's profile ( Bio, comments, captions).
+- Search nearby user's bio.
