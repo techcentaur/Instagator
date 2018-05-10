@@ -1,9 +1,10 @@
 import argparse
 import requests
-
+import json
 
 
 class Instagator:
+    
     def __init__(self, **kwargs):
         default_attr = dict(username='', user_login='', pass_login='')
 
@@ -17,8 +18,23 @@ class Instagator:
         print(self.__dict__)
 
         self.session = requests.Session()
-        self.session.headers = {'user-agent': CHROME_WIN_UA}
+        self.login()
 
+
+    def login(self):
+        base_url = 'https://www.instagram.com/'
+        login_url = base_url + 'accounts/login/ajax/'
+
+        user_agent = ''
+        self.session.headers = {'user-agent' : user_agent}
+        self.session.headers.update({'Referer': base_url})
+
+        req = self.session.get(base_url)
+
+        self.session.headers.update({'X-CSRFToken': req.cookies['csrftoken']})
+        login_data = {'username': user_login, 'password': pass_login}
+
+        login = self.session.post(login_url, )
 
 
 def main():
