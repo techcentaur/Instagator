@@ -1,4 +1,5 @@
-argparse
-json
 requests
-requests-HTML
+json
+argparse
+urllib.request
+PIL
