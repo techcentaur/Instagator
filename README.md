@@ -1,10 +1,36 @@
 # Instagator
 Investigate people on Instagram. Easy as it sounds.
 
-## Aims for beginning
+#### What can you do?
+- Get Display Pic in High Quality
 
-1. Make the insta scraper with requests-HTML.
-2. Will scrape the people around the city in a file.
-3. Will scrape all their bio with their username and public information.
-4. Use keywords search to serach something in their bio or plot of graph of most used words.
-5. Breathe
+## Usage
+
+- Run `pip3 install requirements.txt` to install modules.
+- Run `python3 script.py <username>` to get started.
+
+
+#### Terminal Usage
+
+![terminal](insta.png)
+
+#### Help Usage
+
+```console
+gavy42@jarvis:~/Desktop/github/Instagator$ python3 script.py -h
+usage: script.py [-h] [-q] username
+
+Instagator: Get Display Pic In High Quality
+
+positional arguments:
+  username     Enter the username
+
+optional arguments:
+  -h, --help   show this help message and exit
+  -q, --quiet  Quiet mode
+```
+
+#### Functions Usage
+
+- **About class** - can be instantiated like `Insta(<username>)`.
+- `data()` method that will return a list as [bio, fullname, name, image].
