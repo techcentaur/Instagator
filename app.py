@@ -1,6 +1,7 @@
 import argparse
 import requests
 import json
+import pprint
 
 
 class Instagator:
@@ -38,7 +39,20 @@ class Instagator:
         cookies = login.cookies
         login_text = json.loads(login.text)
 
-        print(login_text)
+        # print(json.dumps(login_text))
+
+        resp = self.session.get(base_url + self.username)
+        resp = resp.text
+        if resp is not None and '_sharedData' in resp:
+            sd = resp.split("window._sharedData = ")[1].split(";</script>")[0]
+            
+            data = (json.loads(sd))
+
+            # print(data['config']['viewer']['biography'])
+            print(data['entry_data']['ProfilePage'][0]['graphql']['user']['biography'])
+            print(data['entry_data']['ProfilePage'][0]['graphql']['user']['full_name'])
+            print(data['entry_data']['ProfilePage'][0]['graphql']['user']['profile_pic_url_hd'])
+            print(data['entry_data']['ProfilePage'][0]['graphql']['user']['username'])
 
 
 def main():
