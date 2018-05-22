@@ -1,14 +1,10 @@
 # Instagator
-Investigate people on Instagram. Easy as it sounds.
-
-#### What can you do?
-- Get Display Pic in High Quality
+Investigate people on Instagram.
 
 ## Usage
 
-- Run `pip3 install requirements.txt` to install modules.
+- Run `pip3 install -r requirements.txt` to install modules.
 - Run `python3 script.py <username>` to get started.
-
 
 #### Terminal Usage
 
@@ -34,7 +30,3 @@ optional arguments:
 
 - **About class** - can be instantiated like `Insta(<username>)`.
 - `data()` method that will return a list as `[bio, fullname, name, image]`.
-
-## What will be new?
-
-- Search keywords in any user's profile ( Bio, comments, captions ).
