@@ -1,5 +1,5 @@
-requests
 json
+pprint
+requests
 argparse
-urllib.request
-PIL
+collections
