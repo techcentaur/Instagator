@@ -1,32 +1,35 @@
 # Instagator
-Investigate people on Instagram.
+Sneaking people on Instagram.
 
 ## Usage
 
 - Run `pip3 install -r requirements.txt` to install modules.
-- Run `python3 script.py <username>` to get started.
-
-#### Terminal Usage
-
-![terminal](insta.png)
+- Run `python3 app.py -h` for help.
 
 #### Help Usage
 
 ```console
-gavy42@jarvis:~/Desktop/github/Instagator$ python3 script.py -h
-usage: script.py [-h] [-q] username
+gavy42@jarvis:~/Instagator$ python3 app.py -h
+usage: app.py [-h] [-t] [-c] (-p | -f) username
 
-Instagator: Get Display Pic In High Quality
+Instagator : Investigate people on Instagram
 
 positional arguments:
-  username     Enter the username
+  username          User to be searched
 
 optional arguments:
-  -h, --help   show this help message and exit
-  -q, --quiet  Quiet mode
+  -h, --help        show this help message and exit
+  -t, --tagged      Include people who are tagged in photos (default=True)
+  -c, --commentors  Include people who have commented on photos
+                    (default=False)
+  -p, --print       Print the output (default)
+  -f, --file        Save in file in JSON format
 ```
 
 #### Functions Usage
 
-- **About class** - can be instantiated like `Insta(<username>)`.
-- `data()` method that will return a list as `[bio, fullname, name, image]`.
+
+## Repository Naming Ideas
+
+- Sneastagram : Sneaking Instagram Accounts.
+- Crawlins : Crawl through Insta Accouts.
