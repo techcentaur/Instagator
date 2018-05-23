@@ -77,9 +77,10 @@ class Instagator:
         return (posts_info)
 
 
-    def crawling_images_url(self, data_dict, commentors = False, tagged = True):
+    def crawling_images_url(self, data_dict, output_choice, commentors = False, tagged = True):
         """returns username list of all people in comments and tags"""
 
+        content = []
         usernamelist = []
 
         for key in data_dict:
@@ -91,13 +92,25 @@ class Instagator:
                     newuser = comment['node']['owner']['username']
                     if newuser not in usernamelist and newuser != self.username:
                         usernamelist.append(newuser)
-                        print(self.rootuser_info(self.userpage_scraper(newuser)))
+                        data1 = self.rootuser_info(self.userpage_scraper(newuser))
+                        if output_choice[0]:
+                            print(data1)
+                        elif output_choice[1]:
+                            content.append(data1)
+
             if tagged:
                 for tag in tempdict['edge_media_to_tagged_user']['edges']:
                     newuser = tag['node']['user']['username']
                     if newuser not in usernamelist and newuser != self.username:
                         usernamelist.append(newuser)
-                        self.rootuser_info(self.userpage_scraper(newuser))
+                        data1 = self.rootuser_info(self.userpage_scraper(newuser))
+                        if output_choice[0]:
+                            print(data1)
+                        elif output_choice[1]:
+                            content.append(data1)
+
+        if output_choice[1]:
+            self.pretty_print({'content': content}, False)
 
 
     @staticmethod
@@ -115,10 +128,10 @@ class Instagator:
         return datadict
 
     @staticmethod
-    def pretty_print(datadict, print_or_save=True):
+    def pretty_print(datadict, do_print=True):
         """prints or saves in a file, json data mainpulation functions"""
         
-        if print_or_save:
+        if do_print:
             print(json.dumps(datadict, sort_keys=True, indent=4))
         else:
             with open('jsondata.json', 'w') as outfile:
@@ -127,23 +140,30 @@ class Instagator:
 
         return 0
 
-    def maincall(self, usernamelist):
+    def maincall(self, usernamelist, output_choice, tag_bool, com_bool):
         """makes calls to functions as it should"""
         
         dict1 = self.userpage_scraper(usernamelist)
-        self.rootuser_info(dict1)
         dict2 = self.user_images_url(dict1)
-        self.crawling_images_url(dict2)
+        self.crawling_images_url(dict2, output_choice, com_bool, tag_bool)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Instagator : Investigate people on Instagram')
     
     parser.add_argument('username', help='User to be searched', default=None)
+    parser.add_argument('-t', '--tagged', help='Include people who are tagged in photos (default=True)', default=True, action="store_true")
+    parser.add_argument('-c', '--commentors', help='Include people who have commented on photos (default=False)', default=False, action="store_true")
+
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-p', '--print', help='Print the output (default)', action="store_true")
+    group.add_argument('-f', '--file', help='Save in file in JSON format', action="store_true")
+
     args = parser.parse_args()
 
     insta = Instagator(**vars(args))
-    insta.maincall(args.username)
+    insta.maincall(args.username, [args.print, args.file], args.tagged, args.commentors)
+
 
 if __name__=="__main__":
     main()
