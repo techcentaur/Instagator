@@ -40,7 +40,7 @@ class Instagator:
         dict1 = datadict['entry_data']['ProfilePage'][0]['graphql']['user']
 
         userdict = OrderedDict()
-        keylist = ['id', 'username', 'full_name', 'edge_follow', 'edge_followed_by', 'is_private', 'external_url', 'profile_pic_url_hd']
+        keylist = ['id', 'username', 'full_name', 'biography', 'edge_follow', 'edge_followed_by', 'is_private', 'external_url', 'profile_pic_url_hd']
 
         for key in keylist:
             if key is 'edge_follow':
@@ -77,7 +77,7 @@ class Instagator:
         return (posts_info)
 
 
-    def crawling_images_url(self, data_dict):
+    def crawling_images_url(self, data_dict, commentors = False, tagged = True):
         """returns username list of all people in comments and tags"""
 
         usernamelist = []
@@ -86,19 +86,20 @@ class Instagator:
             data = self.json_url(data_dict[key]['url'])
             tempdict = data['entry_data']['PostPage'][0]['graphql']['shortcode_media']
             
+            if commentors:
+                for comment in tempdict['edge_media_to_comment']['edges']:
+                    newuser = comment['node']['owner']['username']
+                    if newuser not in usernamelist and newuser != self.username:
+                        usernamelist.append(newuser)
+                        print(self.rootuser_info(self.userpage_scraper(newuser)))
+            if tagged:
+                for tag in tempdict['edge_media_to_tagged_user']['edges']:
+                    newuser = tag['node']['user']['username']
+                    if newuser not in usernamelist and newuser != self.username:
+                        usernamelist.append(newuser)
+                        self.rootuser_info(self.userpage_scraper(newuser))
 
-            for comment in tempdict['edge_media_to_comment']['edges']:
-                newuser = comment['node']['owner']['username']
-                if newuser not in usernamelist and newuser != self.username:
-                    usernamelist.append(newuser)
-            
-            for tag in tempdict['edge_media_to_tagged_user']['edges']:
-                newuser = tag['node']['user']['username']
-                if newuser not in usernamelist and newuser != self.username:
-                    usernamelist.append(newuser)
 
-        print(usernamelist)
-        
     @staticmethod
     def json_url(url):
         """returns json data of response from requesting an url"""
@@ -118,7 +119,7 @@ class Instagator:
         """prints or saves in a file, json data mainpulation functions"""
         
         if print_or_save:
-            json.dumps(datadict, sort_keys=True, indent=4)
+            print(json.dumps(datadict, sort_keys=True, indent=4))
         else:
             with open('jsondata.json', 'w') as outfile:
                 outfile.write(json.dumps(datadict, sort_keys=True, indent=4))
