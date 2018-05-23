@@ -7,6 +7,8 @@ from collections import OrderedDict
 class Instagator:
     
     def __init__(self, **kwargs):
+        """initialises the constructor of the class"""
+        
         default_attr = dict(username='')
 
         allowed_attr = list(default_attr)
@@ -61,9 +63,9 @@ class Instagator:
 
         posts = dict1['edges']
 
-        posts_info = OrderedDict()
+        posts_info = {}
         for count, post in enumerate(posts):
-            tempdict = OrderedDict()
+            tempdict = {}
 
             tempdict['url'] = "https://www.instagram.com/p/" + post['node']['shortcode']
             tempdict['is_video'] = post['node']['is_video']
@@ -72,11 +74,49 @@ class Instagator:
 
             posts_info[count] = tempdict
 
-        return (json.dumps(posts_info, indent=4))
+        return (posts_info)
+
+
+    def crawling_images_url(self, data_dict):
+        """returns username list of all people in comments and tags"""
+
+        usernamelist = []
+
+        for key in data_dict:
+            data = self.json_url(data_dict[key]['url'])
+            tempdict = data['entry_data']['PostPage'][0]['graphql']['shortcode_media']
+            
+
+            for comment in tempdict['edge_media_to_comment']['edges']:
+                newuser = comment['node']['owner']['username']
+                if newuser not in usernamelist and newuser != self.username:
+                    usernamelist.append(newuser)
+            
+            for tag in tempdict['edge_media_to_tagged_user']['edges']:
+                newuser = tag['node']['user']['username']
+                if newuser not in usernamelist and newuser != self.username:
+                    usernamelist.append(newuser)
+
+        print(usernamelist)
+        
+    @staticmethod
+    def json_url(url):
+        """returns json data of response from requesting an url"""
+        
+        response = requests.get(url)
+        raw = response.text
+
+        if raw is not None and '_sharedData' in raw:
+            data = raw.split("window._sharedData = ")[1].split(";</script>")[0]
+            
+            datadict = (json.loads(data))        
+
+        return datadict
 
     @staticmethod
-    def pretty_print(datadict, print_or_save):
-
+    def pretty_print(datadict, print_or_save=True):
+        """prints or saves in a file, json data mainpulation functions"""
+        
         if print_or_save:
             json.dumps(datadict, sort_keys=True, indent=4)
         else:
@@ -87,10 +127,12 @@ class Instagator:
         return 0
 
     def maincall(self, usernamelist):
+        """makes calls to functions as it should"""
+        
         dict1 = self.userpage_scraper(usernamelist)
         self.rootuser_info(dict1)
-        self.user_images_url(dict1)
-
+        dict2 = self.user_images_url(dict1)
+        self.crawling_images_url(dict2)
 
 
 def main():
