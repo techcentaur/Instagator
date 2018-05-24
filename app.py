@@ -145,6 +145,7 @@ class Instagator:
         
         dict1 = self.userpage_scraper(usernamelist)
         dict2 = self.user_images_url(dict1)
+
         self.crawling_images_url(dict2, output_choice, com_bool, tag_bool)
 
 
